@@ -7,6 +7,7 @@ use App\Http\Requests\Category\UpdateCategory;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+require_once 'Default.php';
 
 class CategoryController extends Controller
 {
@@ -21,7 +22,7 @@ class CategoryController extends Controller
     {
         $category = Category::with(['user' => function ($q) {
             $q->select('id', 'name');
-        }])->get()->toArray();
+        }])->orderBy('name')->paginate((int)PAGINATE);
         return view('category/index', ['item' => $category]);
     }
 
@@ -78,7 +79,6 @@ class CategoryController extends Controller
             abort(404);
         }
         return view('category/editCategory', ['item' => $category]);
-
     }
 
     /**

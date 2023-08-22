@@ -6,6 +6,8 @@ namespace App\Listeners;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Events\viewProduct;
+use Illuminate\Support\Facades\Session;
+
 class viewProductListener
 {
     /**
@@ -21,8 +23,12 @@ class viewProductListener
      */
     public function handle(viewProduct $event): void
     {
-        $product = $event ->product;
-        $product ->views = ($product ->views) + 1;
-        $product -> save();
+        $product = $event->product;
+        if (session::has("viewed.$product->id")) {
+            return;
+        }
+        session::put("viewed.$product->id", time());
+        $product->views = ($product->views) + 1;
+        $product->save();
     }
 }

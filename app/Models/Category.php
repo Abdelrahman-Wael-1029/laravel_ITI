@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Role;
+
+
 
 class Category extends Model
 {
@@ -21,12 +24,18 @@ class Category extends Model
         'updated_at'
     ];
 
-    public function products(){
+    function products()
+    {
         return $this->hasMany(Product::class, 'category_id', 'id');
     }
 
-    function user(){
+    function user()
+    {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    function role(){
+        return $this->hasOneThrough(Role::class, User::class, 'role_id', 'user_id', 'id', 'id');
     }
 
 }

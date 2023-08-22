@@ -73,6 +73,10 @@
             </tbody>
         </table>
 
+        <div class="d-flex justify-content-end">
+            {{$item ->links('pagination::bootstrap-4')}}
+        </div>
+
         <a href="{{route('products.create')}}" class="btn btn-primary btn-block">add product</a>
 
     </div>

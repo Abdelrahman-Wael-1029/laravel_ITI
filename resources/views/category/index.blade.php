@@ -10,10 +10,7 @@
 
 
     <div class="container">
-        @error('not allow')
-        <div class="alert-danger" align='center'>{{$message}}</div>
-        @enderror
-        <table class="table table-striped table-hover">
+        <table class="table table-striped ">
             <thead>
                 <tr>
                     <th>
@@ -72,6 +69,10 @@
                     @endforeach
             </tbody>
         </table>
+        <!-- display links -->
+        <div class="d-flex justify-content-end">
+            {{ $item->links('pagination::bootstrap-4') }}
+        </div>
 
         <a href="{{route('category.create')}}" class="btn btn-primary btn-block">add category</a>
 
@@ -80,7 +81,7 @@
 
     @section('script')
     <script>
-        $(document).on('click','.delete', function(e){
+        $(document).on('click', '.delete', function(e) {
             e.preventDefault();
             Swal.fire({
                 title: 'Are you sure?',
@@ -96,29 +97,27 @@
                     let route = '{{route("category.destroy", ":id")}}';
                     route = route.replace(':id', id);
                     $.ajax({
-                        url : route,
-                        // method: "post",
-                        type:"DELETE",
-                        data:$('#categoryDelete').serialize(),
-                        success: (response) =>{
-                            if(response.status === true){
+                        url: route,
+                        method: "post",
+                        data: $('#categoryDelete').serialize(),
+                        success: (response) => {
+                            if (response.status === true) {
                                 $(this).closest('tr').remove();
                                 Swal.fire(
                                     'Deleted!',
                                     'Your file has been deleted.',
                                     'success'
                                 )
-                            }
-                            else{
+                            } else {
                                 Swal.fire(
-                                    'error!',
-                                    response.error ??'something went wrong!',
+                                    'Oops...',
+                                    response.error ?? 'something went wrong!',
                                     'error'
                                 )
                                 console.log(response);
                             }
                         },
-                        error: function(xhr){
+                        error: function(xhr) {
                             console.log(xhr);
 
                         }
@@ -126,10 +125,23 @@
                 }
             })
         });
-
     </script>
+
+    @if($errors->any())
+    <script>
+        $(document).ready(function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ $errors->first() }}'
+            });
+        })
+    </script>
+    @endif
     @stop
 </body>
+
+<script src="{{asset('js/ajax.js')}}"></script>
 
 
 </html>
